@@ -1,0 +1,91 @@
+﻿@using Swarm.Models.EFModel;
+@model List<MeterReplacementHistory>;
+
+@{
+    ViewData["Title"] = "Replacement history";
+}
+
+@if (TempData.ContainsKey("streets") && TempData.ContainsKey("buildings") && TempData.ContainsKey("flatNumbers"))
+{
+    <form method="get" action="">
+        <p>Enter building address: </p>
+        @if (TempData.ContainsKey("streets"))
+        {
+            <select name="street">
+                @foreach (var street in (IEnumerable<string>)TempData["streets"])
+                {
+                    <option value="@street">@street</option>
+                }
+            </select>
+        }
+
+        @if (TempData.ContainsKey("buildings"))
+        {
+            <select name="building">
+                @foreach (var building in (IEnumerable<int>)TempData["buildings"])
+                {
+                    <option value="@building">@building</option>
+                }
+            </select>
+        }
+        @if (TempData.ContainsKey("flatNumbers"))
+        {
+            <select name="flatNumber">
+                @foreach (var flat in (IEnumerable<int>)TempData["flatNumbers"])
+                {
+                    <option value="@flat">@flat</option>
+                }
+            </select>
+        }
+        <input type="submit" value="Apply" />
+    </form>
+}
+
+@if (Model.Any())
+{
+    <table>
+        <tr>
+            <th>
+                Flat street
+            </th>
+            <th>
+                Flat building
+            </th>
+            <th>
+                Flat number
+            </th>
+            <th>
+                New meter factory number
+            </th>
+            <th>
+                Old meter value
+            </th>
+            <th>
+                Setup date
+            </th>
+        </tr>
+        @foreach (var record in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => record.Street)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => record.Building)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => record.FlatNumber)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => record.NewMeterFactoryNumber)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => record.OldMeterValue)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => record.SetupDate)
+                </td>
+            </tr>
+        }
+    </table>
+}

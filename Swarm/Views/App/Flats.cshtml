@@ -1,0 +1,116 @@
+﻿@using Swarm.Models.EFModel;
+@model ValueTuple<List<Flat>, Dictionary<Flat, MeterRecords>>;
+
+@{
+    ViewData["Title"] = "List of flats";
+}
+
+@if (TempData.ContainsKey("streets") && TempData.ContainsKey("buildings"))
+{
+    <form method="get" action="">
+        <p>Enter building address: </p>
+        @if (TempData.ContainsKey("streets"))
+        {
+            <select name="street">
+                @foreach (var street in (IEnumerable<string>)TempData["streets"])
+                {
+                    <option value="@street">@street</option>
+                }
+            </select>
+        }
+
+        @if (TempData.ContainsKey("buildings"))
+        {
+            <select name="building">
+                @foreach (var building in (IEnumerable<int>)TempData["buildings"])
+                {
+                    <option value="@building">@building</option>
+                }
+            </select>
+        }
+        <input type="submit" value="Apply" />
+    </form>
+
+    <form method="get" action="">
+        <input type="submit" value="Reset" />
+    </form>
+}
+
+<table>
+    <tr>
+        <th>
+            Flat street
+        </th>
+        <th>
+            Flat building
+        </th>
+        <th>
+            Flat number
+        </th>
+        <th>
+            Meter factory number
+        </th>
+        <th>
+            Meter value
+        </th>
+        <th>
+            Last check
+        </th>
+        <th>
+            Next check
+        </th>
+        <th>
+            Set new meter
+        </th>
+    </tr>
+    @foreach (var flat in Model.Item1)
+    {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => flat.Street)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => flat.Building)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => flat.FlatNumber)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => flat.MeterFactoryNumber)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => Model.Item2[flat].MeterValue)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => flat.Meter.LastCheck)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => flat.Meter.NextCheck)
+        </td>
+        <td>
+            @if (TempData.ContainsKey("freeMeters"))
+            {
+            <form method="post" action="SetNewMeter">
+                <input type="hidden" value="@flat.Street" name="street" />
+                <input type="hidden" value="@flat.Building" name="building" />
+                <input type="hidden" value="@flat.FlatNumber" name="flatNumber" />
+                <select name="meterFatoryNumber">
+                    @foreach (var meter in (IEnumerable<Meter>)TempData["freeMeters"])
+                    {
+                        <option value="@meter.FactoryNumber">@meter.FactoryNumber</option>
+                    }
+                </select>
+                <input type="submit" value="Apply" />
+            </form>
+            }
+        </td>
+    </tr>
+    }
+</table>
+
+@if (TempData.ContainsKey("message"))
+{
+    <script>
+    alert("@TempData["message"]");
+    </script>
+}
