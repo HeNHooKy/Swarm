@@ -1,4 +1,4 @@
-***To run this project
+***To run this project***
 1. Setup your database with flatmeters.sql
 2. Add connection string and checks frequency of meter to appsetting.json
 ```
